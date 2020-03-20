@@ -5,8 +5,10 @@ import PropTypes from 'prop-types'
 // Destructures the props argument
 const Navbar = ({ title, icon }) => {
     return (
-        <div>
-            
+        <div className="navbar bg-primary">
+            <h1>
+                <i className={icon} /> {title}
+            </h1>
         </div>
     )
 }
@@ -17,7 +19,8 @@ Navbar.propTypes = {
 }
 
 Navbar.defaultProps = {
-    title: 'Contact Keeper'
+    title: 'Contact Keeper',
+    icon: 'fas fa-id-card-alt'
 }
 
 export default Navbar
