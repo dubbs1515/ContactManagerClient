@@ -1,6 +1,6 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 // Destructures the props argument
 const Navbar = ({ title, icon }) => {
@@ -9,6 +9,14 @@ const Navbar = ({ title, icon }) => {
             <h1>
                 <i className={icon} /> {title}
             </h1>
+            <ul>
+                <li>
+                    <Link to='/'>Home</Link>
+                </li>
+                <li>
+                    <Link to='/about'>About</Link>
+                </li>
+            </ul>
         </div>
     )
 }
@@ -19,7 +27,7 @@ Navbar.propTypes = {
 }
 
 Navbar.defaultProps = {
-    title: 'Contact Keeper',
+    title: 'Contact Manager',
     icon: 'fas fa-id-card-alt'
 }
 
