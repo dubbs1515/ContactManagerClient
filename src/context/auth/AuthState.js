@@ -13,7 +13,6 @@ import {
     LOGOUT,
     CLEAR_ERRORS
 } from '../types';
-import contactContext from '../contact/contactContext';
 
 
 const AuthState = props => {
@@ -31,15 +30,12 @@ const AuthState = props => {
 
     // Load User
     const loadUser = async () => {
-        console.log('token in loaduser 1 token: ' + localStorage.token);
         if(localStorage.token) {
             setAuthToken(localStorage.token);
         }
         
         try {
-            await console.log('Here in load user...');
             const res = await axios.get('/api/auth');
-            console.log('User data: ' + res.data);
  
             dispatch({
                 type: USER_LOADED,
@@ -63,14 +59,11 @@ const AuthState = props => {
         try {
             // Proxy in package json file 
             const res = await axios.post('/api/users', formData, config);
-            console.log('before dispatch');
             dispatch({
                 type: REGISTER_SUCCESS,
                 payload: res.data
             });
-            console.log('here in register...');
             loadUser();
-            console.log('User: ' + res.data);
         } catch (err) {
             dispatch({
                 type: REGISTER_FAIL,
@@ -80,9 +73,33 @@ const AuthState = props => {
     }
 
     // Login User
+    const login = async formData => {
+        // Format http req headers for axios
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        try {
+            // Proxy in package json file 
+            const res = await axios.post('/api/auth', formData, config);
+            dispatch({
+                type: LOGIN_SUCCESS,
+                payload: res.data
+            });
+            loadUser();
+        } catch (err) {
+            dispatch({
+                type: LOGIN_FAIL,
+                payload: err.response.data.msg
+            });
+        }
+    }
 
 
     // Logout User
+    const logout = () => dispatch({ type: LOGOUT });
 
 
     // Clear Errors
@@ -98,7 +115,9 @@ const AuthState = props => {
                 error: state.error,
                 register,
                 clearErrors,
-                loadUser
+                loadUser,
+                login,
+                logout
             }}
         >
             {props.children}
