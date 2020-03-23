@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import ContactContext from '../../context/contact/contactContext';
 
 // useState bc a form calls for a degree of component level state
@@ -6,7 +6,25 @@ const ContactForm = () => {
 
     const contactContext = useContext(ContactContext);
 
-    // Component level state items (as oppossed to app level state items)
+    const { addContact, current, updateContact, clearCurrent } = contactContext;
+
+    useEffect(() => {
+        // If edit button is clicked
+        if(current !== null) {
+            // Populate form with original values
+            setContact(current);
+        } else {
+            // Clear the form   
+            setContact({
+                name: '',
+                email: '',
+                phone: '',
+                type: 'personal'
+            });
+        }
+    }, [contactContext, current]);  // [... dependencies...]
+
+    // Component level state items--i.e. state of the form (as oppossed to app level state items)
     const [contact, setContact] = useState({
         name: '',
         email: '',
@@ -23,7 +41,12 @@ const ContactForm = () => {
 
     const onSubmit = e => {
         e.preventDefault();
-        contactContext.addContact(contact);
+        if (current === null) {
+            addContact(contact); 
+        } else {
+            updateContact(contact);
+        }
+        
         setContact({
             name: '',
             email: '',
@@ -33,9 +56,15 @@ const ContactForm = () => {
         // Reset state
     }
 
+    const clearAll = () => {
+        clearCurrent(contact);
+    }
+
+
     return (
         <form onSubmit={onSubmit}>
-            <h2 className='text-primary'>Add Contact</h2>
+            {/* If current not null then edit, else add */}
+            <h2 className='text-primary'>{current ? 'Update Contact' : 'Add Contact'}</h2>
             <input type='text' placeholder='Name' name='name' value={name} onChange={onChange} />
             <input type='email' placeholder='Email' name='email' value={email} onChange={onChange} />
             <input type='text' placeholder='Phone' name='phone' value={phone} onChange={onChange} />
@@ -45,9 +74,12 @@ const ContactForm = () => {
             <input type='radio' name='type' value='professional' checked={type === 'professional'} onChange={onChange} />
             Professional{' '}
             <div>
-                <input type='submit' value='Add Contact' className='btn btn-primary btn-block' />
+                <input type='submit' value={current ? 'Update Contact' : 'Add Contact'} className='btn btn-primary btn-block' />
             </div>
-
+            {/* If current != null */}
+            {current && <div>
+                <button className='btn btn-light btn-block' onClick={clearAll}>Clear</button>
+            </div>}
         </form>
     )
 }
