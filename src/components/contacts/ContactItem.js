@@ -9,10 +9,10 @@ const ContactItem = (props) => {
     const { deleteContact, setCurrent, clearCurrent } = contactContext;
 
     // Alternative to destructuring directly in arguments
-    const { id, name, email, phone, type } = props.contact;
+    const { _id, name, email, phone, type } = props.contact;
 
     const onDelete = () => {
-        deleteContact(id);
+        deleteContact(_id);
         clearCurrent();
     }
 
