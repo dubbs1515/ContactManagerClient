@@ -5,40 +5,50 @@ import ContactItem from './ContactItem';
 import Spinner from '../layout/Spinner';
 
 const Contacts = () => {
-    // Initialize context
-    const contactContext = useContext(ContactContext);
+	// Initialize context
+	const contactContext = useContext(ContactContext);
 
-    // Destructure
-    const { contacts, filtered, getContacts, loading } = contactContext;
+	// Destructure
+	const { contacts, filtered, getContacts, loading } = contactContext;
 
-    useEffect(() => {
-        getContacts();
-        // eslint-disable-next-line
-    }, []); // Empty brackets -> run at beginning  
+	useEffect(() => {
+		getContacts();
+		// eslint-disable-next-line
+	}, []); // Empty brackets -> run at beginning
 
-    if (contacts !== null && contacts.length === 0 && !loading) {
-        return <h4>No contacts to display...</h4>
-    }
+	if (contacts !== null && contacts.length === 0 && !loading) {
+		return <h4>No contacts to display...</h4>;
+	}
 
-    return (
-        <Fragment>
-            {contacts !== null && !loading ? (<TransitionGroup>
-                {filtered !== null ?
-                    // Display filtered contacts 
-                    filtered.map(contact => (
-                    <CSSTransition key={contact._id} timeout={500} classNames="item">
-                        <ContactItem contact={contact} />
-                    </CSSTransition>))
-                :
-                    // Display all contacts 
-                    contacts.map(contact => (
-                    <CSSTransition key={contact._id} timeout={500} classNames="item">
-                        <ContactItem contact={contact} />
-                    </CSSTransition>))
-                }
-            </TransitionGroup>) : <Spinner />}
-        </Fragment>
-    );
+	return (
+		<Fragment>
+			{contacts !== null && !loading ? (
+				<TransitionGroup>
+					{filtered !== null
+						? // Display filtered contacts
+						  filtered.map(contact => (
+								<CSSTransition
+									key={contact._id}
+									timeout={500}
+									classNames='item'>
+									<ContactItem contact={contact} />
+								</CSSTransition>
+						  ))
+						: // Display all contacts
+						  contacts.map(contact => (
+								<CSSTransition
+									key={contact._id}
+									timeout={500}
+									classNames='item'>
+									<ContactItem contact={contact} />
+								</CSSTransition>
+						  ))}
+				</TransitionGroup>
+			) : (
+				<Spinner />
+			)}
+		</Fragment>
+	);
 };
 
 export default Contacts;
